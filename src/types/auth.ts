@@ -8,6 +8,7 @@ export interface User {
   role: UserRole;
   avatar?: string;
   isActive: boolean;
+  isVerified?: boolean;
   createdAt: string;
 }
 

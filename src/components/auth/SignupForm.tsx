@@ -158,7 +158,7 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
             type="submit" 
             className="w-full" 
             variant={roleVariants[role]}
-            disabled={isLoading}
+          disabled={isLoading}
           >
             {isLoading ? (
               <>

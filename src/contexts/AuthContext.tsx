@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         phone: '+91 98765 43210',
         role: credentials.role,
         isActive: true,
+        isVerified: false, // Requires phone verification
         createdAt: new Date().toISOString(),
       };
 
@@ -78,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         phone: data.phone,
         role: data.role,
         isActive: true,
+        isVerified: false, // Requires phone verification
         createdAt: new Date().toISOString(),
       };
 

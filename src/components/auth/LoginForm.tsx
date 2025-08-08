@@ -81,7 +81,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
             type="submit" 
             className="w-full" 
             variant={roleVariants[role]}
-            disabled={isLoading}
+          disabled={isLoading}
           >
             {isLoading ? (
               <>

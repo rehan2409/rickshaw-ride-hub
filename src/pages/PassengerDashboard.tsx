@@ -6,15 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Header } from '@/components/layout/Header';
-import { LocationPicker } from '@/components/maps/LocationPicker';
+import { SimpleLocationPicker } from '@/components/maps/SimpleLocationPicker';
 import { calculateFare, COMMON_ROUTES } from '@/utils/pricing';
 import { useToast } from '@/hooks/use-toast';
+import { PaymentMethods } from '@/components/payment/PaymentMethods';
+import { PhoneVerification } from '@/components/auth/PhoneVerification';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function PassengerDashboard() {
+  const { user } = useAuth();
   const [pickupLocation, setPickupLocation] = useState<{ name: string; coords: [number, number] } | null>(null);
   const [destinationLocation, setDestinationLocation] = useState<{ name: string; coords: [number, number] } | null>(null);
   const [activeRide, setActiveRide] = useState<any>(null);
   const [fareEstimate, setFareEstimate] = useState<any>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [showPhoneVerification, setShowPhoneVerification] = useState(false);
   const { toast } = useToast();
   const [nearbyDrivers] = useState([
     {
@@ -84,25 +90,75 @@ export function PassengerDashboard() {
       return;
     }
 
+    // Check if user's phone is verified
+    if (!user?.isVerified) {
+      setShowPhoneVerification(true);
+      return;
+    }
+
+    // Show payment options
+    setShowPayment(true);
+  };
+
+  const handlePaymentComplete = (paymentMethod: string) => {
+    setShowPayment(false);
+    
+    // Create the ride after successful payment
+    const selectedDriver = nearbyDrivers[0]; // For demo, use first driver
     setActiveRide({
       id: Date.now().toString(),
-      driver: { ...driver, fare: fareEstimate.totalFare },
-      pickup: pickupLocation.name,
-      destination: destinationLocation.name,
+      driver: { ...selectedDriver, fare: fareEstimate.totalFare },
+      pickup: pickupLocation!.name,
+      destination: destinationLocation!.name,
       status: 'confirmed',
       estimatedTime: fareEstimate.estimatedTime,
       distance: fareEstimate.distance,
+      paymentMethod,
     });
 
     toast({
-      title: "Ride Booked!",
-      description: `${driver.name} is on the way to your pickup location.`,
+      title: "Ride Booked Successfully!",
+      description: `${selectedDriver.name} is on the way. Payment via ${paymentMethod}.`,
     });
+  };
+
+  const handlePhoneVerified = () => {
+    setShowPhoneVerification(false);
+    toast({
+      title: "Phone Verified!",
+      description: "You can now book rides.",
+    });
+    setShowPayment(true);
   };
 
   const handleCancelRide = () => {
     setActiveRide(null);
   };
+
+  // Show phone verification modal
+  if (showPhoneVerification) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-secondary/10 flex items-center justify-center p-4">
+        <PhoneVerification
+          phone={user?.phone || '+91 9876543210'}
+          onVerified={handlePhoneVerified}
+          onBack={() => setShowPhoneVerification(false)}
+        />
+      </div>
+    );
+  }
+
+  // Show payment options modal
+  if (showPayment && fareEstimate) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-secondary/10 flex items-center justify-center p-4">
+        <PaymentMethods
+          amount={fareEstimate.totalFare}
+          onPaymentComplete={handlePaymentComplete}
+        />
+      </div>
+    );
+  }
 
   if (activeRide) {
     return (
@@ -196,7 +252,7 @@ export function PassengerDashboard() {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label>Pickup Location</Label>
-                  <LocationPicker
+                  <SimpleLocationPicker
                     onLocationSelect={setPickupLocation}
                     placeholder="Search pickup location in Ratnagiri"
                     selectedLocation={pickupLocation}
@@ -211,7 +267,7 @@ export function PassengerDashboard() {
                 
                 <div className="space-y-2">
                   <Label>Destination</Label>
-                  <LocationPicker
+                  <SimpleLocationPicker
                     onLocationSelect={setDestinationLocation}
                     placeholder="Search destination in Ratnagiri"
                     selectedLocation={destinationLocation}
