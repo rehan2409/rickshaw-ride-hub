@@ -46,13 +46,14 @@ export function LandingPage() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                  Your Ride, Your Way with{' '}
+                  Ratnagiri's Premier{' '}
                   <span className="bg-gradient-primary bg-clip-text text-transparent">
                     RickshawGo
                   </span>
+                  {' '}Service
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-lg">
-                  Connect with local auto-rickshaw drivers instantly. Safe, affordable, and reliable transportation at your fingertips.
+                  Connect with verified auto-rickshaw drivers across Ratnagiri. From Railway Station to Ganpatipule Beach - safe, affordable rides.
                 </p>
               </div>
 
@@ -72,11 +73,11 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-secondary" />
-                  <span className="text-sm font-medium">10K+ Users</span>
+                  <span className="text-sm font-medium">2K+ Users</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Car className="h-5 w-5 text-accent" />
-                  <span className="text-sm font-medium">500+ Drivers</span>
+                  <span className="text-sm font-medium">150+ Drivers</span>
                 </div>
               </div>
             </div>
@@ -100,10 +101,10 @@ export function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Why Choose RickshawGo?
+              Why Choose RickshawGo in Ratnagiri?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Experience the best of local transportation with our comprehensive platform
+              Navigate Ratnagiri's beautiful locations with trusted local drivers
             </p>
           </div>
 
@@ -158,10 +159,10 @@ export function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground">
-              Ready to Transform Your Commute?
+              Ready to Explore Ratnagiri?
             </h2>
             <p className="text-xl text-primary-foreground/80">
-              Join thousands of satisfied passengers and drivers on RickshawGo
+              Join hundreds of satisfied passengers and drivers across Ratnagiri
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="xl" variant="outline" className="bg-background text-foreground hover:bg-background/90" onClick={() => setShowAuth(true)}>

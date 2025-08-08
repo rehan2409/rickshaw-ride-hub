@@ -11,47 +11,47 @@ export function DriverDashboard() {
   const [rideRequests] = useState([
     {
       id: '1',
-      passengerName: 'Priya Sharma',
-      pickup: 'Bandra West Station',
-      destination: 'Linking Road',
-      distance: '3.2 km',
-      fare: 65,
-      estimatedTime: '15 mins',
+      passengerName: 'Priya Patil',
+      pickup: 'Ratnagiri Railway Station',
+      destination: 'Ratnadurg Fort',
+      distance: '3.8 km',
+      fare: 60,
+      estimatedTime: '12 mins',
     },
     {
       id: '2',
-      passengerName: 'Rahul Gupta', 
-      pickup: 'Juhu Beach',
-      destination: 'Andheri East',
-      distance: '5.1 km',
-      fare: 85,
-      estimatedTime: '22 mins',
+      passengerName: 'Rahul Sawant', 
+      pickup: 'Bus Stand',
+      destination: 'Ganpatipule Beach',
+      distance: '15.2 km',
+      fare: 195,
+      estimatedTime: '45 mins',
     }
   ]);
 
   const [todayStats] = useState({
-    earnings: 1250,
-    rides: 8,
+    earnings: 860,
+    rides: 6,
     rating: 4.8,
-    onlineTime: '6h 30m',
+    onlineTime: '5h 45m',
   });
 
   const [rideHistory] = useState([
     {
       id: '1',
-      passenger: 'Amit Kumar',
-      from: 'Andheri',
-      to: 'Bandra',
-      fare: 75,
+      passenger: 'Amit Kulkarni',
+      from: 'Railway Station',
+      to: 'Thibaw Palace',
+      fare: 40,
       time: '2:30 PM',
       rating: 5,
     },
     {
       id: '2',
-      passenger: 'Sneha Patel',
-      from: 'Juhu',
-      to: 'Vile Parle',
-      fare: 45,
+      passenger: 'Sneha Sawant',
+      from: 'Market Road',
+      to: 'Mandavi Beach',
+      fare: 85,
       time: '1:15 PM',
       rating: 4,
     }

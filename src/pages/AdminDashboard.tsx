@@ -8,12 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function AdminDashboard() {
   const [stats] = useState({
-    totalUsers: 2847,
-    totalDrivers: 524,
-    activeRides: 186,
-    totalRevenue: 45320,
-    todayRides: 234,
-    completionRate: 94.2,
+    totalUsers: 1847,
+    totalDrivers: 156,
+    activeRides: 28,
+    totalRevenue: 18520,
+    todayRides: 45,
+    completionRate: 96.8,
   });
 
   const [users] = useState([
@@ -49,44 +49,44 @@ export function AdminDashboard() {
   const [drivers] = useState([
     {
       id: '1',
-      name: 'Rajesh Kumar',
-      vehicle: 'MH 12 AB 1234',
+      name: 'Ravi Patil',
+      vehicle: 'MH 08 RT 1234',
       rating: 4.8,
       totalRides: 156,
       earnings: 12450,
       status: 'online',
-      location: 'Bandra',
+      location: 'Railway Station',
     },
     {
       id: '2',
-      name: 'Suresh Patel',
-      vehicle: 'MH 12 CD 5678',
+      name: 'Santosh Sawant',
+      vehicle: 'MH 08 RT 5678',
       rating: 4.6,
       totalRides: 89,
       earnings: 8320,
       status: 'offline',
-      location: 'Andheri',
+      location: 'Bus Stand',
     }
   ]);
 
   const [recentRides] = useState([
     {
       id: '1',
-      passenger: 'Priya Sharma',
-      driver: 'Rajesh Kumar',
-      from: 'Bandra',
-      to: 'Andheri',
-      fare: 85,
+      passenger: 'Priya Patil',
+      driver: 'Ravi Patil',
+      from: 'Railway Station',
+      to: 'Ganpatipule Beach',
+      fare: 195,
       status: 'completed',
       time: '2:30 PM',
     },
     {
       id: '2',
-      passenger: 'Amit Singh',
-      driver: 'Suresh Patel',
-      from: 'Juhu',
-      to: 'Linking Road',
-      fare: 65,
+      passenger: 'Amit Kulkarni',
+      driver: 'Santosh Sawant',
+      from: 'Market Road',
+      to: 'Ratnadurg Fort',
+      fare: 60,
       status: 'in-progress',
       time: '2:45 PM',
     }
@@ -291,7 +291,7 @@ export function AdminDashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Avg. Fare</span>
-                    <span className="font-bold text-accent">₹68</span>
+                    <span className="font-bold text-accent">₹85</span>
                   </div>
                 </CardContent>
               </Card>
@@ -303,7 +303,7 @@ export function AdminDashboard() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Active Drivers</span>
-                    <Badge className="bg-secondary text-secondary-foreground">324 online</Badge>
+                    <Badge className="bg-secondary text-secondary-foreground">38 online</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Server Status</span>

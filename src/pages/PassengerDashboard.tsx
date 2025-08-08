@@ -1,72 +1,102 @@
-import { useState } from 'react';
-import { MapPin, Navigation, Clock, Star, Phone, Car } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Navigation, Clock, Star, Phone, Car, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Header } from '@/components/layout/Header';
+import { LocationPicker } from '@/components/maps/LocationPicker';
+import { calculateFare, COMMON_ROUTES } from '@/utils/pricing';
+import { useToast } from '@/hooks/use-toast';
 
 export function PassengerDashboard() {
-  const [pickup, setPickup] = useState('');
-  const [destination, setDestination] = useState('');
+  const [pickupLocation, setPickupLocation] = useState<{ name: string; coords: [number, number] } | null>(null);
+  const [destinationLocation, setDestinationLocation] = useState<{ name: string; coords: [number, number] } | null>(null);
   const [activeRide, setActiveRide] = useState<any>(null);
+  const [fareEstimate, setFareEstimate] = useState<any>(null);
+  const { toast } = useToast();
   const [nearbyDrivers] = useState([
     {
       id: '1',
-      name: 'Rajesh Kumar',
+      name: 'Ravi Patil',
       rating: 4.8,
       distance: '2 min away',
-      vehicleNumber: 'MH 12 AB 1234',
-      fare: 45,
+      vehicleNumber: 'MH 08 RT 1234',
+      location: 'Near Railway Station',
     },
     {
       id: '2', 
-      name: 'Suresh Patel',
+      name: 'Santosh Sawant',
       rating: 4.6,
       distance: '4 min away',
-      vehicleNumber: 'MH 12 CD 5678',
-      fare: 48,
+      vehicleNumber: 'MH 08 RT 5678',
+      location: 'Bus Stand Area',
     },
     {
       id: '3',
-      name: 'Vikram Singh',
+      name: 'Prakash Bhosale',
       rating: 4.9,
       distance: '6 min away', 
-      vehicleNumber: 'MH 12 EF 9012',
-      fare: 42,
+      vehicleNumber: 'MH 08 RT 9012',
+      location: 'Market Road',
     }
   ]);
 
   const [rideHistory] = useState([
     {
       id: '1',
-      from: 'Bandra West',
-      to: 'Andheri East',
+      from: 'Railway Station',
+      to: 'Ganpatipule Beach',
       date: '2024-01-15',
-      fare: 85,
-      driver: 'Ramesh Sharma',
+      fare: 195,
+      driver: 'Ravi Patil',
       rating: 5,
     },
     {
       id: '2',
-      from: 'Juhu Beach',
-      to: 'Linking Road',
+      from: 'Market Road',
+      to: 'Ratnadurg Fort',
       date: '2024-01-10',
-      fare: 65,
-      driver: 'Amit Joshi',
+      fare: 60,
+      driver: 'Santosh Sawant',
       rating: 4,
     }
   ]);
 
+  // Calculate fare when both locations are selected
+  useEffect(() => {
+    if (pickupLocation && destinationLocation) {
+      const estimate = calculateFare(pickupLocation.coords, destinationLocation.coords);
+      setFareEstimate(estimate);
+    } else {
+      setFareEstimate(null);
+    }
+  }, [pickupLocation, destinationLocation]);
+
   const handleBookRide = (driver: any) => {
+    if (!pickupLocation || !destinationLocation || !fareEstimate) {
+      toast({
+        title: "Missing Information",
+        description: "Please select both pickup and destination locations.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setActiveRide({
       id: Date.now().toString(),
-      driver,
-      pickup,
-      destination,
+      driver: { ...driver, fare: fareEstimate.totalFare },
+      pickup: pickupLocation.name,
+      destination: destinationLocation.name,
       status: 'confirmed',
-      estimatedTime: '12 mins',
+      estimatedTime: fareEstimate.estimatedTime,
+      distance: fareEstimate.distance,
+    });
+
+    toast({
+      title: "Ride Booked!",
+      description: `${driver.name} is on the way to your pickup location.`,
     });
   };
 
@@ -163,29 +193,65 @@ export function PassengerDashboard() {
                 </CardTitle>
                 <CardDescription>Enter your pickup and destination</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="pickup">Pickup Location</Label>
-                  <Input
-                    id="pickup"
-                    placeholder="Enter pickup location"
-                    value={pickup}
-                    onChange={(e) => setPickup(e.target.value)}
+                  <Label>Pickup Location</Label>
+                  <LocationPicker
+                    onLocationSelect={setPickupLocation}
+                    placeholder="Search pickup location in Ratnagiri"
+                    selectedLocation={pickupLocation}
                   />
+                  {pickupLocation && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span>{pickupLocation.name}</span>
+                    </div>
+                  )}
                 </div>
+                
                 <div className="space-y-2">
-                  <Label htmlFor="destination">Destination</Label>
-                  <Input
-                    id="destination"
-                    placeholder="Where are you going?"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
+                  <Label>Destination</Label>
+                  <LocationPicker
+                    onLocationSelect={setDestinationLocation}
+                    placeholder="Search destination in Ratnagiri"
+                    selectedLocation={destinationLocation}
                   />
+                  {destinationLocation && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span>{destinationLocation.name}</span>
+                    </div>
+                  )}
                 </div>
+
+                {fareEstimate && (
+                  <Card className="bg-accent/5 border-accent/20">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm flex items-center gap-2">
+                        <Calculator className="h-4 w-4" />
+                        Fare Estimate
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Distance:</span>
+                        <span className="font-medium">{fareEstimate.distance}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>Estimated Time:</span>
+                        <span className="font-medium">{fareEstimate.estimatedTime}</span>
+                      </div>
+                      <div className="flex justify-between text-lg font-bold border-t pt-2">
+                        <span>Total Fare:</span>
+                        <span className="text-accent">₹{fareEstimate.totalFare}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </CardContent>
             </Card>
 
-            {pickup && destination && (
+            {pickupLocation && destinationLocation && fareEstimate && (
               <Card className="shadow-elevated">
                 <CardHeader>
                   <CardTitle>Available Drivers</CardTitle>
@@ -207,7 +273,8 @@ export function PassengerDashboard() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-bold text-accent">₹{driver.fare}</p>
+                          <p className="text-lg font-bold text-accent">₹{fareEstimate.totalFare}</p>
+                          <p className="text-xs text-muted-foreground mb-2">{driver.location}</p>
                           <Button 
                             size="sm" 
                             variant="passenger"
@@ -237,7 +304,7 @@ export function PassengerDashboard() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Money Saved</span>
-                  <span className="font-semibold text-secondary">₹340</span>
+                  <span className="font-semibold text-secondary">₹255</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Average Rating</span>
@@ -252,6 +319,7 @@ export function PassengerDashboard() {
             <Card className="shadow-elevated">
               <CardHeader>
                 <CardTitle>Recent Rides</CardTitle>
+                <CardDescription>Your recent trips in Ratnagiri</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {rideHistory.map((ride) => (
